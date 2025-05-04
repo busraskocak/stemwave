@@ -5,6 +5,20 @@ function PasswordForm({ addNewPassword }) {
   const [serialNo, setSerialNo] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedModusProduct, setSelectedModusProduct] = useState("");
+  const [ipAddress, setIpAddress] = useState("");
+
+  // IP adresini al
+  useEffect(() => {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        setIpAddress(data.ip);
+      })
+      .catch(error => {
+        console.error('IP adresi alınamadı:', error);
+      });
+  }, []);
 
   // Rastgele şifre oluşturma fonksiyonu
   const generatePassword = () => {
@@ -17,7 +31,8 @@ function PasswordForm({ addNewPassword }) {
         customerName, 
         product: selectedProduct, 
         password: newPassword,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        ipAddress: ipAddress // IP adresini ekledik
       };
       
       addNewPassword(newPasswordEntry);
@@ -27,7 +42,19 @@ function PasswordForm({ addNewPassword }) {
       setSerialNo("");
       setCustomerName("");
       setSelectedProduct("");
+      setSelectedModusProduct("");
     }
+  };
+
+  // Radio buton seçildiğinde çağrılan fonksiyon
+  const handleProductChange = (value) => {
+    setSelectedProduct(value);
+    
+  };
+
+  const handleModusChange = (value) => {
+    setSelectedModusProduct(value);
+    
   };
 
   return (
@@ -64,46 +91,74 @@ function PasswordForm({ addNewPassword }) {
         />
       </div>
       
+      {/* Modus F ve Modus Portable F için ayrı grup */}
+      <div className="form-group modus-group">
+        <label>Modus Devices</label>
+        <div className="radio-group vertical-radio">
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="modus-product"
+              value="Modus F"
+              checked={selectedModusProduct === "Modus F"}
+              onChange={() => handleModusChange("Modus F")}
+            />
+            <span>Modus F</span>
+          </label>
+          
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="modus-product"
+              value="Modus Portable F"
+              checked={selectedModusProduct=== "Modus Portable F"}
+              onChange={() => handleModusChange("Modus Portable F")}
+            />
+            <span>Modus Portable F</span>
+          </label>
+        </div>
+      </div>
+      
       <div className="form-group">
         <label>Select Product</label>
         <div className="radio-group">
           <label className="radio-label">
             <input
               type="radio"
-              name="product"
+              name="standard-product"
               value="Handpiece"
               checked={selectedProduct === "Handpiece"}
-              onChange={(e) => setSelectedProduct(e.target.value)}
+              onChange={() => handleProductChange("Handpiece")}
             />
             Handpiece
           </label>
           <label className="radio-label">
             <input
               type="radio"
-              name="product"
+              name="standard-product"
               value="Generator"
               checked={selectedProduct === "Generator"}
-              onChange={(e) => setSelectedProduct(e.target.value)}
+              onChange={() => handleProductChange("Generator")}
             />
             Generator
           </label>
           <label className="radio-label">
             <input
               type="radio"
-              name="product"
+              name="standard-product"
               value="Electrode"
               checked={selectedProduct === "Electrode"}
-              onChange={(e) => setSelectedProduct(e.target.value)}
+              onChange={() => handleProductChange("Electrode")}
             />
             Electrode
           </label>
           <label className="radio-label">
             <input
               type="radio"
-              name="product"
+              name="standard-product"
               value="Product D"
               checked={selectedProduct === "Product D"}
-              onChange={(e) => setSelectedProduct(e.target.value)}
+              onChange={() => handleProductChange("Product D")}
             />
             Product D
           </label>
@@ -113,7 +168,7 @@ function PasswordForm({ addNewPassword }) {
       <button
         className="generate-btn"
         onClick={generatePassword}
-        disabled={!deviceId || !serialNo || !customerName || !selectedProduct}
+        disabled={!deviceId || !serialNo || !customerName || !selectedModusProduct || !selectedProduct}
       >
         Generate Password
       </button>

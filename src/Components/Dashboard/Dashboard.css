@@ -300,7 +300,25 @@ body {
 .radio-label input {
     margin-right: 0.5rem;
 }
+.modus-group {
+  margin-bottom: 20px;
+}
 
+.vertical-radio {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vertical-radio .radio-label {
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+}
+
+.vertical-radio .radio-label input {
+  margin-right: 8px;
+}
 .generate-btn {
     background-color: #3498db;
     color: white;
