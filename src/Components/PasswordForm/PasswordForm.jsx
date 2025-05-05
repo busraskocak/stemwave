@@ -29,7 +29,8 @@ function PasswordForm({ addNewPassword }) {
         deviceId, 
         serialNo, 
         customerName, 
-        product: selectedProduct, 
+        product: selectedProduct,
+        modusProduct: selectedModusProduct, 
         password: newPassword,
         timestamp: new Date().toLocaleString(),
         ipAddress: ipAddress // IP adresini ekledik
